@@ -84,11 +84,19 @@ const VcDetails = ({
                 const skipKeys = ['start_date', 'end_date', 'id', '@context', 'originalvc', 'originalvc1', 'issueddate', 'recordvalidupto'];
                 if (skipKeys.includes(key)) return null;
 
+                // Skip if value is JSON object
+                if (typeof value === 'object' && value !== null) {
+                  return null;
+                }
+
                 let displayValue = value;
-                if (key === 'Expiry Date' || key === 'Issue Date') {
-                  displayValue = formatDate(value);
-                } else if (typeof value === 'object') {
-                  displayValue = JSON.stringify(value, null, 2);
+                
+                // Check if value is a valid date string
+                if (typeof value === 'string') {
+                  const dateValue = new Date(value);
+                  if (!isNaN(dateValue.getTime()) && value.length > 10) {
+                    displayValue = formatDate(value);
+                  }
                 }
 
                 return (
@@ -196,11 +204,19 @@ const VcDetails = ({
                       const skipKeys = ['start_date', 'end_date', 'id', '@context', 'originalvc', 'originalvc1', 'issueddate', 'recordvalidupto'];
                       if (skipKeys.includes(key)) return null;
 
+                      // Skip if value is JSON object
+                      if (typeof value === 'object' && value !== null) {
+                        return null;
+                      }
+
                       let displayValue = value;
-                      if (key === 'Expiry Date' || key === 'Issue Date') {
-                        displayValue = formatDate(value);
-                      } else if (typeof value === 'object') {
-                        displayValue = JSON.stringify(value, null, 2);
+                      
+                      // Check if value is a valid date string
+                      if (typeof value === 'string') {
+                        const dateValue = new Date(value);
+                        if (!isNaN(dateValue.getTime()) && value.length > 10) {
+                          displayValue = formatDate(value);
+                        }
                       }
 
                       return (
