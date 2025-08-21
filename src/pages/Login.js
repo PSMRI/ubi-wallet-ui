@@ -28,7 +28,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center" style={{ background: '#181C44' }}>
-      <img src={logoUrl} alt="Digi-Vritti Wallet" className="object-contain p-20 ml-10" />
+      <img src={logoUrl} alt="Digi-Vrtti Wallet" className="object-contain p-20 ml-10" />
       <div className="card w-full max-w-md">
         <form className="mt-6" onSubmit={handleSubmit}>
           <input
