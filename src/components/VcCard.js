@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { FileText, Calendar, CalendarDays, User, Eye, CheckSquare, Square } from 'lucide-react';
 
 const VcCard = ({ 
@@ -148,6 +149,17 @@ const VcCard = ({
       </div>
     </div>
   );
+};
+
+VcCard.propTypes = {
+  vc: PropTypes.object.isRequired,
+  mode: PropTypes.oneOf(['view', 'select']),
+  isSelected: PropTypes.bool,
+  onCardClick: PropTypes.func,
+  onSelectionChange: PropTypes.func,
+  onPreviewClick: PropTypes.func,
+  formatDate: PropTypes.func.isRequired,
+  isExpired: PropTypes.func.isRequired,
 };
 
 export default VcCard; 
