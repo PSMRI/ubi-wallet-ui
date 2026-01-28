@@ -1,41 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wallet PWA</title>
-    <meta name="description" content="A simple wallet app for managing verifiable credentials">
-    <meta name="theme-color" content="#3b82f6">
-    <link rel="manifest" href="./../public/manifest.json">
-    <link rel="apple-touch-icon" href="./../public/icon-512.png">
-    <link rel="icon" type="image/x-icon" href="./../public/favicon.ico">
-    <script type="module">
-        (function () {
-            const controller = new AbortController();
-            const timeout = setTimeout(() => controller.abort(), 3000);
-            const HEALTH_URL = import.meta.env.WALLET_APP_API_URL + "/health";
-            fetch(HEALTH_URL, {
-                method: "GET",
-                cache: "no-store",
-                mode: "no-cors",
-                signal: controller.signal
-            })
-                .then(() => {
-                    // no-cors returns opaque response
-                    // if fetch succeeded → backend is reachable
-                    clearTimeout(timeout);
-                })
-                .catch(() => {
-                    window.location.replace("/maintenance.html");
-                });
-        })();
-    </script>
-    <script type="module" src="./index.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wallet PWA</title>
+
+  <meta name="description" content="Wallet PWA">
+  <meta name="theme-color" content="#3b82f6">
+
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/icon-512.png">
 </head>
 
 <body>
-    <div id="root"></div>
-</body>
+  <div id="root"></div>
 
+  <!-- React entry ONLY -->
+  <script type="module" src="/src/index.js"></script>
+</body>
 </html>
