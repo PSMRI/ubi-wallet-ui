@@ -4,26 +4,44 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import './index.css';
 
-// Register service worker
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register(new URL('./../public/sw.js', import.meta.url))
-      .then((registration) => {
-        console.log('SW registered: ', registration);
-      })
-      .catch((registrationError) => {
-        console.log('SW registration failed: ', registrationError);
-      });
-  });
+const API_URL = import.meta.env.WALLET_APP_API_URL;
+const HEALTH_URL = `${API_URL}/health`;
+
+async function checkBackend() {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 3000);
+
+  try {
+    await fetch(HEALTH_URL, {
+      method: 'GET',
+      cache: 'no-store',
+      signal: controller.signal
+    });
+    clearTimeout(timeout);
+    startApp();
+  } catch (err) {
+    window.location.replace('/maintenance.html');
+  }
 }
 
-const container = document.getElementById('root');
-const root = createRoot(container);
+function startApp() {
+  const container = document.getElementById('root');
+  const root = createRoot(container);
 
-root.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </React.StrictMode>
-); 
+  root.render(
+    <React.StrictMode>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </React.StrictMode>
+  );
+
+  // Register SW AFTER app load
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+      .then(() => console.log('Service Worker registered'))
+      .catch(err => console.error('SW failed', err));
+  }
+}
+
+checkBackend();
