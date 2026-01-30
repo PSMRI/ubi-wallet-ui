@@ -20,7 +20,10 @@ async function checkBackend() {
     clearTimeout(timeout);
     startApp();
   } catch (err) {
-    window.location.replace('/maintenance.html');
+    // ✅ Parcel-trackable redirect
+    window.location.replace(
+      new URL('../public/maintenance.html', import.meta.url)
+    );
   }
 }
 
@@ -36,9 +39,10 @@ function startApp() {
     </React.StrictMode>
   );
 
-  // Register SW AFTER app load
+  // ✅ Parcel-compatible Service Worker registration
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js')
+    navigator.serviceWorker
+      .register(new URL('../public/sw.js', import.meta.url))
       .then(() => console.log('Service Worker registered'))
       .catch(err => console.error('SW failed', err));
   }
