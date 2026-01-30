@@ -1,41 +1,42 @@
-const CACHE_NAME = 'wallet-static-v1';
-const STATIC_ASSETS = [
+const CACHE_NAME = 'wallet-pwa-v1';
+const urlsToCache = [
   '/',
   '/index.html',
-  '/favicon.ico',
   '/manifest.json',
+  '/icon-192.png',
   '/icon-512.png'
 ];
 
+// Install event
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache =>
-      Promise.allSettled(
-        STATIC_ASSETS.map(asset => cache.add(asset))
-      )
-    )
+    caches.open(CACHE_NAME)
+      .then((cache) => cache.addAll(urlsToCache))
   );
 });
 
+// Fetch event
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    caches.match(event.request)
+      .then((response) => {
+        // Return cached version or fetch from network
+        return response || fetch(event.request);
+      })
+  );
+});
+
+// Activate event
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(
-        keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
-      )
-    )
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheName !== CACHE_NAME) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
   );
-});
-
-self.addEventListener('fetch', (event) => {
-  const url = new URL(event.request.url);
-
-  // ❌ Never cache API
-  if (url.pathname.startsWith('/api')) {
-    return;
-  }
-
-  event.respondWith(
-    caches.match(event.request).then(res => res || fetch(event.request))
-  );
-});
+}); 
